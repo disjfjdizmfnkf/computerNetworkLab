@@ -1,7 +1,7 @@
 <template>
   <div class="panel-account">
     <el-form
-      label-width="55px"
+      label-width="80px"
       size="large" :model="account"
       :rules="accountRules"
       status-icon
@@ -16,7 +16,7 @@
     </el-form>
   </div>
 </template>
-S
+
 
 <script setup lang="ts">
 
@@ -26,7 +26,6 @@ import type { FormRules, ElForm } from 'element-plus'
 import useLoginStore from '@/stores/login/login'
 import type { IAccount } from '@/types'
 import { localCache } from '@/utils/cache'
-
 
 
 const CACHE_NAME = 'name'

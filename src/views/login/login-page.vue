@@ -19,7 +19,8 @@ import LoginPanel from '@/views/login/cpns/login-panel.vue'
   align-items: center;
   justify-content: center;
 
-  //background: url("@/assets/img/login-bg.svg");
+  background: url("@/assets/img/login-bg.svg") no-repeat;
+  background-size: cover;
 }
 
 </style>
