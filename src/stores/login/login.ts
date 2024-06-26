@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { accountLoginRequest, getUserInfoById, userRegister } from '@/service/modules/login'
 import type { IAccount, IRegister } from '@/types'
 import { localCache, sessionCache } from '@/utils/cache'
-import { LOGIN_TOKEN, USER_AVATAR, USER_NAME, USER_SIGN } from '@/global/constants'
+import { LOGIN_TOKEN, USER_AVATAR, USER_ID, USER_NAME, USER_SIGN } from '@/global/constants'
 import router from '@/router'
 
 
@@ -40,6 +40,7 @@ const useLoginStore = defineStore('modules', {
       sessionCache.setCache(USER_AVATAR, this.avatarUrl)
       sessionCache.setCache(USER_NAME, this.userName)
       sessionCache.setCache(USER_SIGN, this.userSign)
+      sessionCache.setCache(USER_ID, id)
 
 
       // 验证身份信息之后进入主界面
