@@ -9,7 +9,6 @@
         <div class="sign">{{ item.sign}}</div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -18,16 +17,13 @@ import useChatStore from '@/stores/chat/chat'
 import { storeToRefs } from 'pinia'
 
 const chatStore = useChatStore()
-
 const { friends } = storeToRefs(chatStore)
-
 const setCurrentFriend = chatStore.setCurrentFriend
 
-const itemClick = (id) => {
+const itemClick = (id: number) => {
   setCurrentFriend(id)
   console.log(`点击用户,id:${id}`)
 }
-
 </script>
 
 <style lang="less" scoped>

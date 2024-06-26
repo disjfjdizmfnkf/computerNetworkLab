@@ -3,14 +3,14 @@
     <el-card class="chat-card">
       <template #header>
         <div class="chat-header">
-          <span>{{ friends[0].name }}</span>
+          <span>{{ currentFriend.name }}</span>
         </div>
       </template>
       <div class="box">
         <div class="message-box" ref="messageBox">
-          <div v-for="(message, index) in chatMessages[1]" :key="index"
+          <div v-for="(message, index) in currentMessages" :key="index"
                :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']">
-            <el-avatar :size="40" :src="message.from === 'user' ? (sessionCache.getCache(USER_AVATAR) ?? defaultAvatar) : friends[0].avatar" />
+            <el-avatar :size="40" :src="message.from === 'user' ? (sessionCache.getCache(USER_AVATAR) ?? defaultAvatar) : currentFriend.avatar" />
             <div class="message-bubble">
               <p>{{ message.content }}</p>
             </div>
@@ -45,8 +45,7 @@ import { sessionCache } from '@/utils/cache.ts'
 import { USER_AVATAR } from '@/global/constants.ts'
 
 const chatStore = useChatStore()
-const { chatMessages, friends, currentFriendId } = storeToRefs(chatStore)
-
+const { chatMessages, friends, currentFriendId, currentFriend, currentMessages } = storeToRefs(chatStore)
 
 const sendMessage = (message) => {
   chatStore.sendMessage(message)

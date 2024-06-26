@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { sendMessageToGpt } from '@/service/modules/chat'
 
-
 const useChatStore = defineStore('chat', {
   state: () => ({
     friends: [
@@ -12,7 +11,7 @@ const useChatStore = defineStore('chat', {
       { id: 5, name: '无骑士', avatar: 'http://localhost:3000/moment/photos/4', sign: '' }
     ],
     chatMessages: {
-      1: [{ from: 'friend', content: '你好，有什么可以帮到你的吗？😀' }]
+      1: [{ from: 'friend', content: '我是🤖，你可以问我任何问题，但我不一定回答' }]
     },
     currentFriendId: 1
   }),
@@ -22,12 +21,12 @@ const useChatStore = defineStore('chat', {
       const friendId = this.currentFriendId
       this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'user', content: message }]
 
-      // 发送消息到服务器并获取回复
-      // const res = await sendMessageToGpt(message)
-      // 将回复消息添加到聊天记录中，这样整个聊天记录就会更新，性能损耗相比较大
+      const res = await sendMessageToGpt(message)
+      // 整个全部刷新，性能影响稍大
       this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'friend', content: res.data }]
     },
     setCurrentFriend(friendId: number) {
+      console.log('setCurrentFriend', friendId)
       this.currentFriendId = friendId
       if (!this.chatMessages[friendId]) {
         this.chatMessages[friendId] = []
