@@ -1,12 +1,12 @@
 <template>
   <div class="aside-main">
-    <div class="item" @click="itemClick">
+    <div class="item" @click="itemClick(item.id)" v-for="item in friends" :key="item.id">
       <span class="block">
-        <el-avatar :size="50" :src="wuTouQiShi" />
+        <el-avatar :size="50" :src='item.avatar' />
       </span>
       <div class="info">
-        <div class="name">无头骑士</div>
-        <div class="sign">[🤖] 就是一个聊天机器人</div>
+        <div class="name">{{ item.name }}</div>
+        <div class="sign">{{ item.sign}}</div>
       </div>
     </div>
 
@@ -14,10 +14,18 @@
 </template>
 
 <script setup lang="ts">
-import wuTouQiShi from '@/assets/img/wutouqishi.jpg'
+import useChatStore from '@/stores/chat/chat'
+import { storeToRefs } from 'pinia'
 
-const itemClick = () => {
+const chatStore = useChatStore()
 
+const { friends } = storeToRefs(chatStore)
+
+const setCurrentFriend = chatStore.setCurrentFriend
+
+const itemClick = (id) => {
+  setCurrentFriend(id)
+  console.log(`点击用户,id:${id}`)
 }
 
 </script>

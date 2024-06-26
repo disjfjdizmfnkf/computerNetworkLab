@@ -3,14 +3,14 @@
     <el-card class="chat-card">
       <template #header>
         <div class="chat-header">
-          <span>{{ friendInfo.name }}</span>
+          <span>{{ friends[0].name }}</span>
         </div>
       </template>
       <div class="box">
         <div class="message-box" ref="messageBox">
-          <div v-for="(message, index) in friendInfo.messages" :key="index"
+          <div v-for="(message, index) in chatMessages[1]" :key="index"
                :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']">
-            <el-avatar :size="40" :src="message.from === 'user' ? (userAvatar ?? defaultAvatar) : friendInfo.avatar" />
+            <el-avatar :size="40" :src="message.from === 'user' ? (sessionCache.getCache(USER_AVATAR) ?? defaultAvatar) : friends[0].avatar" />
             <div class="message-bubble">
               <p>{{ message.content }}</p>
             </div>
@@ -21,10 +21,10 @@
         <el-input
           v-model="currentMessage"
           placeholder="输入消息..."
-          @keyup.enter="sendMessage"
+          @keyup.enter="sendMessage(currentMessage)"
         >
           <template #append>
-            <el-button @click="sendMessage" type="primary" class="send-button">
+            <el-button @click="sendMessage(currentMessage)" type="primary" class="send-button">
               <el-icon size="20px">
                 <Promotion />
               </el-icon>
@@ -37,29 +37,24 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watchEffect } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import defaultAvatar from '@/assets/img/default.jpg'
+import useChatStore from '@/stores/chat/chat.ts'
+import { storeToRefs } from 'pinia'
+import { sessionCache } from '@/utils/cache.ts'
+import { USER_AVATAR } from '@/global/constants.ts'
 
-const props = defineProps({
-  friendInfo: {
-    type: Object,
-    required: true
-  },
-  userAvatar: {
-    type: String,
-  }
-})
+const chatStore = useChatStore()
+const { chatMessages, friends, currentFriendId } = storeToRefs(chatStore)
+
+
+const sendMessage = (message) => {
+  chatStore.sendMessage(message)
+  currentMessage.value = ''
+}
 
 const currentMessage = ref('')
 const messageBox = ref(null)
-const emit = defineEmits(['send-message'])
-
-const sendMessage = () => {
-  if (!currentMessage.value.trim()) return
-  emit('send-message', currentMessage.value)
-  currentMessage.value = ''
-  scrollToBottom()
-}
 
 const scrollToBottom = () => {
   nextTick(() => {
@@ -71,11 +66,9 @@ const scrollToBottom = () => {
 
 onMounted(scrollToBottom)
 
-watchEffect(() => {
-  if (props.friendInfo.messages.length) {
-    scrollToBottom()
-  }
-})
+watch(() => chatMessages.value[currentFriendId.value], () => {
+  scrollToBottom()
+}, { deep: true })
 </script>
 
 <style scoped>
