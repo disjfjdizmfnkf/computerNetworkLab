@@ -6,20 +6,19 @@
         <template v-for="(message, index) in messages" :key="index">
           <div v-if="message.from === 'user'" class="messageFromUser">
             <div class="userMessageWrapper">
-              <div class="userMessageContent">{{ message.data }}</div>
+              <div class="userMessageContent">{{ message.content }}</div>
             </div>
           </div>
           <div v-else class="messageFromChatGpt">
             <div class="chatBotInfo">
-              <img src="" alt="" class="chatBotAvatar"/>
-              <span class="chatBotName">无头骑士</span>
+              <img :src="friendInfo.avatar" alt="" class="chatBotAvatar"/>
+              <span class="chatBotName">{{ friendInfo.name }}</span>
             </div>
             <div class="chatGptMessageWrapper">
-              <div class="chatGptMessageContent">{{ message.data }}</div>
+              <div class="chatGptMessageContent">{{ message.content }}</div>
             </div>
           </div>
         </template>
-<!--        <van-loading v-if="loading" type="spinner" />-->
       </div>
       <div class="inputContainer">
         <input
@@ -41,44 +40,18 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
-import axios from 'axios';
-import {storeToRefs} from "pinia";
+import { ref } from 'vue'
+import { useChatStore } from '@/stores/chat/chat'
+import { storeToRefs } from 'pinia'
 
+const currentMessage = ref('')
+const chatStore = useChatStore()
+const { currentMessages, currentFriend } = storeToRefs(chatStore)
 
-// const homeStore = useHomeStore()
-// const {loading} = storeToRefs(homeStore)
-
-
-const currentMessage = ref('');
-const messages = ref([
-  {
-    from: 'chatGpt',
-    data: '😊您好！我是一个AI助手，有什么我可以帮助您的吗？',
-  }
-]);
-
-async function sendMessage(message) {
-  if (!message) return;
-  messages.value.push({
-    from: 'user',
-    data: message,
-  })
+const sendMessage = async (message) => {
+  if (!message) return
+  await chatStore.sendMessage(message)
   currentMessage.value = ''
-  // homeStore.setLoading(true)
-  await axios
-    .post('http://localhost:3000/chat/bot', {
-      message: message,
-    })
-    .then((response) => {
-      messages.value.push({
-        from: 'chatGpt',
-        data: response.data.data,
-      })
-    })
-    .finally(() => {
-      // homeStore.setLoading(false)
-    })
 }
 </script>
 

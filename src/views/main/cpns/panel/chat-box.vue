@@ -10,7 +10,7 @@
         <div class="message-box" ref="messageBox">
           <div v-for="(message, index) in friendInfo.messages" :key="index"
                :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']">
-            <el-avatar :size="40" :src="message.from === 'user' ? USER_AVATAR : friendInfo.avatar" />
+            <el-avatar :size="40" :src="message.from === 'user' ? (userAvatar ?? defaultAvatar) : friendInfo.avatar" />
             <div class="message-bubble">
               <p>{{ message.content }}</p>
             </div>
@@ -25,7 +25,7 @@
         >
           <template #append>
             <el-button @click="sendMessage" type="primary" class="send-button">
-              <el-icon  size="20px">
+              <el-icon size="20px">
                 <Promotion />
               </el-icon>
             </el-button>
@@ -45,9 +45,8 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  USER_AVATAR: {
+  userAvatar: {
     type: String,
-    default:  defaultAvatar
   }
 })
 
@@ -128,6 +127,9 @@ watchEffect(() => {
   border-radius: 20px;
   position: relative;
   margin: 0 14px;
+  p {
+    text-align: left;
+  }
 }
 
 .user-message .message-bubble {
