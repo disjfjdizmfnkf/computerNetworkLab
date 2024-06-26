@@ -21,7 +21,7 @@ const handleExitClick = () => {
   // 1.清除本地缓存
   localCache.removeCache(LOGIN_TOKEN)
   // 2.返回登录界面
-  router.push('/login')
+  router.push('/modules')
 }
 </script>
 

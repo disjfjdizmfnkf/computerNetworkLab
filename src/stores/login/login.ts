@@ -1,22 +1,27 @@
 import { defineStore } from 'pinia'
-import { accountLoginRequest, getUserInfoById, getUserMenuById, userRegister } from '@/service/login/login'
+import { accountLoginRequest, getUserInfoById, userRegister } from '@/service/modules/login'
 import type { IAccount, IRegister } from '@/types'
-import { localCache } from '@/utils/cache'
-import { LOGIN_TOKEN } from '@/global/constants'
+import { localCache, sessionCache } from '@/utils/cache'
+import { LOGIN_TOKEN, USER_AVATAR, USER_NAME, USER_SIGN } from '@/global/constants'
 import router from '@/router'
 
 
 interface ILoginState {
   token: string
-  userInfo: any
-  userMenus: any
+  userName: string
+  avatarUrl: string
+  userSign: string
 }
 
+import defaultAvatar from '@/assets/img/default.jpg'
 
-const useLoginStore = defineStore('login', {
+
+const useLoginStore = defineStore('modules', {
   state: (): ILoginState => ({
     token: localCache.getCache(LOGIN_TOKEN) ?? '',
-    userMenus: localCache.getCache('userMenus') ?? []
+    userName: localCache.getCache(USER_NAME)?? '',
+    avatarUrl: sessionCache.getCache(USER_AVATAR),
+    userSign: sessionCache.getCache(USER_SIGN) ?? '这个人很懒，什么也没有留下',
   }),
 
   actions: {
@@ -26,17 +31,16 @@ const useLoginStore = defineStore('login', {
       const loginResult =  await accountLoginRequest(account)
       const id = loginResult.data.id
       this.token = loginResult.data.token
+      this.userName = loginResult.data.name
+      this.avatarUrl = loginResult.data.avatar_url
+      this.userSign = loginResult.data.sign
 
-      // 2.对token进行本地缓存
+      // 2.对token和其它信息进行本地缓存
       localCache.setCache(LOGIN_TOKEN, this.token)
+      sessionCache.setCache(USER_AVATAR, this.avatarUrl)
+      sessionCache.setCache(USER_NAME, this.userName)
+      sessionCache.setCache(USER_SIGN, this.userSign)
 
-      // 3.获取登录用户的详情信息
-      const userInfoResult =  await getUserInfoById(id)
-      const userInfo = userInfoResult.data
-      this.userInfo = userInfo
-
-      // 5.进行本地缓存
-      localCache.setCache('userInfo', userInfo)
 
       // 验证身份信息之后进入主界面
       await router.push('/main')

@@ -10,7 +10,7 @@ const router = createRouter({
       redirect: 'main',
     },
     {
-      path: '/login',
+      path: '/modules',
       // 懒路由加载
       component: () => import('../views/login/login-page.vue'),
     },
@@ -30,7 +30,7 @@ const router = createRouter({
 router.beforeEach(to => {
   const token = localCache.getCache(LOGIN_TOKEN)
   if( to.path === '/main' && !token ){
-    return '/login'
+    return '/modules'
   }
 })
 

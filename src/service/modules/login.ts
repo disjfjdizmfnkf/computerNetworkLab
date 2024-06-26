@@ -27,8 +27,8 @@ export function userRegister(account: IAccount) {
   })
 }
 
-export function getUserMenuById(id: number){
+export function getUserInfoByName(name: string){
   return hyRequest.get({
-    url: `users/${id}/menu`
+    url: `users/${name}`
   })
 }

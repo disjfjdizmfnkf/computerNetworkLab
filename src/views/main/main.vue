@@ -5,12 +5,12 @@
         <el-aside class="left" width="300px">
           <aside-top />
           <aside-main />
-          <aside-footer ref="asideFooterRef"/>
         </el-aside>
         <el-main class="right">
           <el-icon class="logo" size="90" color="grey">
             <Basketball />
           </el-icon>
+          <aside-footer ref="asideFooterRef" />
         </el-main>
       </el-container>
     </div>
@@ -34,16 +34,16 @@ const asideFooter = ref<InstanceType<typeof AsideFooter>>()
 .main-content {
   background-color: #f7f7f7;
   height: 100vh;
+  width: 1280px;
 
   .left {
     height: 100%;
-
   }
 
   .right {
     position: relative;
     text-align: center;
-    background-color: antiquewhite;
+    background-color: #f0f0f0;
 
     .logo {
       position: absolute;

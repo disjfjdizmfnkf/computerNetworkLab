@@ -1,6 +1,6 @@
 <template>
   <div class="aside-main">
-    <div class="item">
+    <div class="item" @click="itemClick">
       <span class="block">
         <el-avatar :size="50" :src="wuTouQiShi" />
       </span>
@@ -9,64 +9,17 @@
         <div class="sign">[🤖] 就是一个聊天机器人</div>
       </div>
     </div>
-    <div class="item">
-      <span class="block">
-        <el-avatar :size="50" :src="defalutAvatar" />
-      </span>
-      <div class="info">
-        <div class="name">name</div>
-        <div class="sign">woshishabiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-      </div>
-    </div>
-    <div class="item">
-      <span class="block">
-        <el-avatar :size="50" :src="defalutAvatar" />
-      </span>
-      <div class="info">
-        <div class="name">name</div>
-        <div class="sign">woshishabiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-      </div>
-    </div>    <div class="item">
-      <span class="block">
-        <el-avatar :size="50" :src="defalutAvatar" />
-      </span>
-    <div class="info">
-      <div class="name">name</div>
-      <div class="sign">woshishabiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-    </div>
-  </div>    <div class="item">
-      <span class="block">
-        <el-avatar :size="50" :src="defalutAvatar" />
-      </span>
-    <div class="info">
-      <div class="name">name</div>
-      <div class="sign">woshishabiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-    </div>
-  </div>    <div class="item">
-      <span class="block">
-        <el-avatar :size="50" :src="defalutAvatar" />
-      </span>
-    <div class="info">
-      <div class="name">name</div>
-      <div class="sign">woshishabiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-    </div>
-  </div>    <div class="item">
-      <span class="block">
-        <el-avatar :size="50" :src="defalutAvatar" />
-      </span>
-    <div class="info">
-      <div class="name">name</div>
-      <div class="sign">woshishabiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-    </div>
-  </div>
-
 
   </div>
 </template>
 
 <script setup lang="ts">
-import defalutAvatar from '@/assets/img/default.jpg'
 import wuTouQiShi from '@/assets/img/wutouqishi.jpg'
+
+const itemClick = () => {
+
+}
+
 </script>
 
 <style lang="less" scoped>
