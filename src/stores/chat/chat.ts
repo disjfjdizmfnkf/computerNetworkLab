@@ -12,7 +12,7 @@ const useChatStore = defineStore('chat', {
     ],
     chatMessages: {
       1: [{ from: 'friend', content: '我是🤖，你可以问我任何问题，但我不一定回答' }]
-    },
+    } as Record<number, { from: string; content: string; }[]>,
     currentFriendId: 1
   }),
   actions: {
