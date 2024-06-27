@@ -14,7 +14,10 @@ import io from 'socket.io-client'
 
 const messages = ref([])
 const newMessage = ref('')
-const socket = io('http://localhost:3001')
+
+const socket = io('http://localhost:3001', {
+  withCredentials: true,
+});
 
 const sendMessage = () => {
   socket.emit('chat message', newMessage.value)
