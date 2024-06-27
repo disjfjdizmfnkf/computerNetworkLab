@@ -61,7 +61,7 @@ import { USER_AVATAR } from '@/global/constants.ts'
 import { Picture } from '@element-plus/icons-vue'
 
 const chatStore = useChatStore()
-const { chatMessages, friends, currentFriendId, currentFriend, currentMessages } = storeToRefs(chatStore)
+const { chatMessages, currentFriendId, currentFriend, currentMessages } = storeToRefs(chatStore)
 
 const sendMessage = (message) => {
   chatStore.sendMessage(message)

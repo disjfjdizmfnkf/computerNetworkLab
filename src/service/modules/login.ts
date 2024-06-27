@@ -32,3 +32,19 @@ export function getUserInfoByName(name: string){
     url: `users/${name}`
   })
 }
+
+export function getUserFriendsInfoList(userId: number) {
+  return hyRequest.get({
+    url: `/users/${userId}/friends`
+  })
+}
+
+export function addFriends(userName: string) {
+  return hyRequest.post({
+    // userId是发送好友请求的人的id，以后有时间要好好写后端
+    url: `/:userId/friends`,
+    data: {
+      userName
+    }
+  })
+}

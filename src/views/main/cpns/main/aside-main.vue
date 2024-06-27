@@ -19,6 +19,7 @@ import { storeToRefs } from 'pinia'
 const chatStore = useChatStore()
 const { friends } = storeToRefs(chatStore)
 const setCurrentFriend = chatStore.setCurrentFriend
+chatStore.getFriendList()
 
 const itemClick = (id: number) => {
   setCurrentFriend(id)

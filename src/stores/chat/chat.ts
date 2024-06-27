@@ -3,9 +3,16 @@ import { sendMessageToGpt } from '@/service/modules/chat'
 import io from 'socket.io-client'
 import { ElMessage } from 'element-plus'
 import CryptoJS from 'crypto-js'
+import { getUserFriendsInfoList } from '@/service/modules/login'
+import { sessionCache } from '@/utils/cache'
+import { USER_ID } from '@/global/constants'
 
 // 加密密钥
 const ENCRYPTION_KEY = '1234567890abcdef'
+
+function cleanString(str: string) {
+  return str.replace(/[\n\t]/g, ' ');
+}
 
 // 加密函数
 function encryptMessage(message: string) {
@@ -33,10 +40,7 @@ const socket = io('http://localhost:3001', {
 const useChatStore = defineStore('chat', {
   state: () => ({
     friends: [
-      { id: 1, name: '无头骑士', avatar: 'http://localhost:3000/moment/photos/8', sign: '[🤖] 就是一个聊天机器人' },
-      { id: 13, name: '1234567', avatar: 'http://localhost:3000/users/avatar/2', sign: '人' },
-      { id: 4, name: 'dtcdtc', avatar: 'http://localhost:3000/users/avatar/4', sign: '博观而约取，厚积而薄发' }
-    ],
+      { id: 1, name: '无头骑士', avatar: 'http://localhost:3000/moment/photos/8', sign: '[🤖] 就是一个聊天机器人' },],
     chatMessages: {
       1: [{ from: 'friend', content: '我是🤖，你可以问我任何问题，但我不一定回答' }]
     } as Record<number, { from: string; content: string; type?: string; }[]>,
@@ -44,6 +48,19 @@ const useChatStore = defineStore('chat', {
     userId: null as number | null
   }),
   actions: {
+    async getFriendList() {
+      const res = await getUserFriendsInfoList(sessionCache.getCache(USER_ID))
+      console.log('好友列表处理之前', res.data)
+      const friendsList = res.data.map((friend: { id: number; name: string; avatar_url: string; sign: string; }) => ({
+        id: friend.id,
+        name: friend.name,
+        avatar: friend.avatar_url,
+        sign: friend.sign
+      }))
+      console.log('好友列表', friendsList)
+      this.friends.push(...friendsList)
+    },
+
     login(userId: number) {
       this.userId = userId
       socket.emit('login', userId)
@@ -58,7 +75,8 @@ const useChatStore = defineStore('chat', {
       if (friendId === 1) {
         // AI 聊天
         const res = await sendMessageToGpt(message)
-        this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'friend', content: res.data, type: 'text' }]
+        const resolve = cleanString(res.data)  // 去掉换行符
+        this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'friend', content: resolve, type: 'text' }]
       } else {
         // 用户聊天
         const encryptedMessage = encryptMessage(JSON.stringify({ message, type }))
@@ -74,12 +92,6 @@ const useChatStore = defineStore('chat', {
     },
 
     receiveMessage(from: number, encryptedContent: string) {
-      // if (!this.chatMessages[from]) {
-      //   this.chatMessages[from] = []
-      // }
-      // const decryptedContent = JSON.parse(decryptMessage(encryptedContent))
-      // this.chatMessages[from].push({ from: 'friend', content: decryptedContent.message, type: decryptedContent.type})
-      // console.log('收到消息', decryptedContent)
       if (!this.chatMessages[from]) {
         this.chatMessages[from] = []
       }
@@ -115,11 +127,10 @@ socket.on('private message', ({ from, message }) => {
 // 监听好友上线
 socket.on('friend online', (friendId) => {
   ElMessage.success(`好友 ${getFriendNameById(friendId)} 上线了`)
-})
-
-// 监听好友离线
-socket.on('friend offline', (friendId) => {
-  ElMessage.info(`好友 ${getFriendNameById(friendId)} 离线了`)
+  const store = useChatStore();
+  if (!store.$state.chatMessages[friendId]) {
+    store.$state.chatMessages[friendId] = []
+  }
 })
 
 export default useChatStore
