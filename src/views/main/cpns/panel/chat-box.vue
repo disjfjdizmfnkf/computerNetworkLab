@@ -94,7 +94,13 @@ watch(() => chatMessages.value[currentFriendId.value], () => {
 }, { deep: true })
 </script>
 
-<style scoped>
+<style scoped lang="less">
+
+// 清除全局样式了
+:deep .el-input__wrapper {
+  padding-right: 0;
+}
+
 .chatbox-container {
   max-width: 95%;
   height: 100%;
@@ -177,7 +183,6 @@ watch(() => chatMessages.value[currentFriendId.value], () => {
 
   .upload-button{
     display: flex;
-
     align-items: center;
   }
 
