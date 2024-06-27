@@ -37,8 +37,7 @@ import { ref } from 'vue'
 import PrivateInfo from '@/views/main/cpns/panel/private-info.vue'
 import MomentPanel from '@/views/main/cpns/panel/moment-panel.vue'
 import ChatBox from '@/views/main/cpns/panel/chat-box.vue'
-import { USER_AVATAR } from '@/global/constants'
-import { sessionCache } from '@/utils/cache'
+
 
 const activeTab = ref('')
 
