@@ -5,10 +5,6 @@ const useChatStore = defineStore('chat', {
   state: () => ({
     friends: [
       { id: 1, name: '无头骑士', avatar: 'http://localhost:3000/moment/photos/8', sign: '[🤖] 就是一个聊天机器人' },
-      { id: 2, name: '无', avatar: 'http://localhost:3000/moment/photos/1', sign: '' },
-      { id: 3, name: '头骑士', avatar: 'http://localhost:3000/moment/photos/2', sign: '' },
-      { id: 4, name: '无头士', avatar: 'http://localhost:3000/moment/photos/3', sign: '' },
-      { id: 5, name: '无骑士', avatar: 'http://localhost:3000/moment/photos/4', sign: '' }
     ],
     chatMessages: {
       1: [{ from: 'friend', content: '我是🤖，你可以问我任何问题，但我不一定回答' }]

@@ -14,7 +14,19 @@ interface ILoginState {
 }
 
 import defaultAvatar from '@/assets/img/default.jpg'
+import { ElMessage } from 'element-plus'
 
+
+function getGreeting() {
+  const currentHour = new Date().getHours();
+  if (currentHour < 12) {
+    return "☀️早上好";
+  } else if (currentHour < 18) {
+    return "🍵下午好";
+  } else {
+    return "✨晚上好";
+  }
+}
 
 const useLoginStore = defineStore('modules', {
   state: (): ILoginState => ({
@@ -28,12 +40,21 @@ const useLoginStore = defineStore('modules', {
     // 账号登录发送吗网络请求 网络请求 -> 缓存token -> 获取用户信息 ->  进入主界面
     async LoginAccountAction(account: IAccount){
       // 1.调用网络请求函数 store func -> service func -> hyRequest(封装后的axios的一个实例) -> axios的一个方法
-      const loginResult =  await accountLoginRequest(account)
-      const id = loginResult.data.id
+      const loginResult = await accountLoginRequest(account)
+
+      if(loginResult.code === 0) {
+        ElMessage.success(`用户:${loginResult.data.name},${getGreeting()}！😊欢迎回来！`)
+      } else {
+        ElMessage.error(loginResult.message)
+        return
+      }
+
+      const id = loginResult.data.id ?? 0
       this.token = loginResult.data.token
       this.userName = loginResult.data.name
       this.avatarUrl = loginResult.data.avatar_url
       this.userSign = loginResult.data.sign
+
 
       // 2.对token和其它信息进行本地缓存
       localCache.setCache(LOGIN_TOKEN, this.token)
