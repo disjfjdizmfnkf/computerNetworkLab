@@ -7,13 +7,13 @@
         </div>
       </template>
       <div class="box">
-        <div class="message-box" ref="messageBox">
-          <div v-for="(message, index) in currentMessages" :key="index"
-               :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']">
-            <el-avatar :size="40" :src="message.from === 'user' ? (sessionCache.getCache(USER_AVATAR) ?? defaultAvatar) : currentFriend.avatar" />
-            <div class="message-bubble">
-              <p>{{ message.content }}</p>
-            </div>
+        <div v-for="(message, index) in currentMessages" :key="index"
+             :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']">
+          <el-avatar :size="40"
+                     :src="message.from === 'user' ? (sessionCache.getCache(USER_AVATAR) ?? defaultAvatar) : currentFriend.avatar" />
+          <div class="message-bubble">
+            <img v-if="message.type === 'image'" :src="message.content" alt="Image" class="message-image" />
+            <p v-else>{{ message.content }}</p>
           </div>
         </div>
       </div>
@@ -30,6 +30,21 @@
               </el-icon>
             </el-button>
           </template>
+          <template #suffix>
+            <el-upload
+              class="upload-button"
+              action="#"
+              :auto-upload="false"
+              :show-file-list="false"
+              :on-change="handleImageUpload"
+            >
+              <el-button type="primary">
+                <el-icon>
+                  <Picture />
+                </el-icon>
+              </el-button>
+            </el-upload>
+          </template>
         </el-input>
       </div>
     </el-card>
@@ -43,6 +58,7 @@ import useChatStore from '@/stores/chat/chat.ts'
 import { storeToRefs } from 'pinia'
 import { sessionCache } from '@/utils/cache.ts'
 import { USER_AVATAR } from '@/global/constants.ts'
+import { Picture } from '@element-plus/icons-vue'
 
 const chatStore = useChatStore()
 const { chatMessages, friends, currentFriendId, currentFriend, currentMessages } = storeToRefs(chatStore)
@@ -50,6 +66,14 @@ const { chatMessages, friends, currentFriendId, currentFriend, currentMessages }
 const sendMessage = (message) => {
   chatStore.sendMessage(message)
   currentMessage.value = ''
+}
+
+const handleImageUpload = (file) => {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    chatStore.sendMessage(e.target.result, 'image')
+  }
+  reader.readAsDataURL(file.raw)
 }
 
 const currentMessage = ref('')
@@ -96,6 +120,12 @@ watch(() => chatMessages.value[currentFriendId.value], () => {
   height: 400px;
 }
 
+.message-image {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 10px;
+}
+
 .message-box {
   flex-grow: 1;
   overflow-y: auto;
@@ -119,6 +149,7 @@ watch(() => chatMessages.value[currentFriendId.value], () => {
   border-radius: 20px;
   position: relative;
   margin: 0 14px;
+
   p {
     text-align: left;
   }
@@ -143,6 +174,12 @@ watch(() => chatMessages.value[currentFriendId.value], () => {
 .input-area {
   padding: 20px;
   border-top: 1px solid #eee;
+
+  .upload-button{
+    display: flex;
+
+    align-items: center;
+  }
 
   .send-button {
     display: flex;

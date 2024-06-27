@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { accountLoginRequest, getUserInfoById, userRegister } from '@/service/modules/login'
+import { accountLoginRequest, userRegister } from '@/service/modules/login'
 import type { IAccount, IRegister } from '@/types'
 import { localCache, sessionCache } from '@/utils/cache'
 import { LOGIN_TOKEN, USER_AVATAR, USER_ID, USER_NAME, USER_SIGN } from '@/global/constants'
@@ -13,7 +13,6 @@ interface ILoginState {
   userSign: string
 }
 
-import defaultAvatar from '@/assets/img/default.jpg'
 import { ElMessage } from 'element-plus'
 
 
