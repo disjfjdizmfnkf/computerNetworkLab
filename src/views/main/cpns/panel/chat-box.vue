@@ -6,7 +6,7 @@
           <span>{{ currentFriend.name }}</span>
         </div>
       </template>
-      <div class="box">
+      <div class="message-box" ref="messageBox">
         <div v-for="(message, index) in currentMessages" :key="index"
              :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']">
           <el-avatar :size="40"
@@ -64,8 +64,10 @@ const chatStore = useChatStore()
 const { chatMessages, currentFriendId, currentFriend, currentMessages } = storeToRefs(chatStore)
 
 const sendMessage = (message) => {
-  chatStore.sendMessage(message)
-  currentMessage.value = ''
+  if (message.trim()) {
+    chatStore.sendMessage(message)
+    currentMessage.value = ''
+  }
 }
 
 const handleImageUpload = (file) => {
@@ -87,9 +89,11 @@ const scrollToBottom = () => {
   })
 }
 
-onMounted(scrollToBottom)
+onMounted(() => {
+  scrollToBottom()
+})
 
-watch(() => chatMessages.value[currentFriendId.value], () => {
+watch(() => currentMessages.value, () => {
   scrollToBottom()
 }, { deep: true })
 </script>
@@ -114,16 +118,19 @@ watch(() => chatMessages.value[currentFriendId.value], () => {
   flex-direction: column;
 }
 
+.message-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+  height: 400px;
+}
+
 .chat-header {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
   font-weight: bolder;
-}
-
-.box {
-  height: 400px;
 }
 
 .message-image {
