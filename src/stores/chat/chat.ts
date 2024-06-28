@@ -11,7 +11,7 @@ import { USER_ID } from '@/global/constants'
 const ENCRYPTION_KEY = '1234567890abcdef'
 
 function cleanString(str: string) {
-  return str.replace(/[\n\t]/g, ' ');
+  return str.replace(/[\n\t]/g, ' ')
 }
 
 // 加密函数
@@ -27,16 +27,21 @@ function decryptMessage(encryptedMessage: string) {
 
 // id -> name
 function getFriendNameById(friendId: number) {
-  const friend = useChatStore().$state.friends.find((f: { id: number; name: string; avatar: string; sign: string; }) => f.id === friendId);
-  return friend ? friend.name : undefined;
+  const friend = useChatStore().$state.friends.find((f: {
+    id: number;
+    name: string;
+    avatar: string;
+    sign: string;
+  }) => f.id === friendId)
+  return friend ? friend.name : undefined
 }
 
-let socket: any = null;
+let socket: any = null
 
 const useChatStore = defineStore('chat', {
   state: () => ({
     friends: [
-      { id: 1, name: '无头骑士', avatar: 'http://localhost:3000/moment/photos/8', sign: '[🤖] 就是一个聊天机器人' },
+      { id: 1, name: '无头骑士', avatar: 'http://localhost:3000/moment/photos/8', sign: '[🤖] 就是一个聊天机器人' }
     ],
     chatMessages: {
       1: [{ from: 'friend', content: '我是🤖，你可以问我任何问题，但我不一定回答' }]
@@ -64,23 +69,23 @@ const useChatStore = defineStore('chat', {
       if (!socket) {
         socket = io('http://localhost:3001', {
           withCredentials: true
-        });
+        })
 
         socket.on('connect', () => {
-          this.isSocketConnected = true;
-          this.login(userId);
-        });
+          this.isSocketConnected = true
+          this.login(userId)
+        })
 
-        socket.on('private message', ({ from, message }: {from: number, message: string}) => {
-          this.receiveMessage(from, message);
-        });
+        socket.on('private message', ({ from, message }: { from: number, message: string }) => {
+          this.receiveMessage(from, message)
+        })
 
         socket.on('friend online', (friendId: number) => {
-          ElMessage.success(`好友 ${getFriendNameById(friendId)} 上线了`);
+          ElMessage.success(`好友 ${getFriendNameById(friendId)} 上线了`)
           if (!this.$state.chatMessages[friendId]) {
-            this.$state.chatMessages[friendId] = [];
+            this.$state.chatMessages[friendId] = []
           }
-        });
+        })
       }
     },
 
@@ -101,7 +106,12 @@ const useChatStore = defineStore('chat', {
         // AI 聊天
         const res = await sendMessageToGpt(message)
         const resolve = cleanString(res.data)  // 去掉换行符
-        this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'friend', content: resolve, type: 'text' }]
+        const formattedResolve = resolve.replace(/\\n/g, '\n')  // 将 \n 转换为实际的换行符
+        this.chatMessages[friendId] = [...this.chatMessages[friendId], {
+          from: 'friend',
+          content: formattedResolve,
+          type: 'text'
+        }]
       } else {
         // 用户聊天
         const encryptedMessage = encryptMessage(JSON.stringify({ message, type }))
@@ -122,7 +132,7 @@ const useChatStore = defineStore('chat', {
       }
       try {
         const decryptedContent = JSON.parse(decryptMessage(encryptedContent))
-        this.chatMessages[from].push({ from: 'friend', content: decryptedContent.message, type: decryptedContent.type})
+        this.chatMessages[from].push({ from: 'friend', content: decryptedContent.message, type: decryptedContent.type })
         console.log('收到消息', decryptedContent)
       } catch (error) {
         console.error('解析消息时出错', error)
@@ -134,7 +144,7 @@ const useChatStore = defineStore('chat', {
       if (!this.chatMessages[friendId]) {
         this.chatMessages[friendId] = []
       }
-    },
+    }
   },
 
   getters: {

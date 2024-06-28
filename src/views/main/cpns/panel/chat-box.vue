@@ -13,7 +13,7 @@
                      :src="message.from === 'user' ? (sessionCache.getCache(USER_AVATAR) ?? defaultAvatar) : currentFriend.avatar" />
           <div class="message-bubble">
             <img v-if="message.type === 'image'" :src="message.content" alt="Image" class="message-image" />
-            <p v-else>{{ message.content }}</p>
+            <p v-else class="message-text">{{ message.content }}</p>
           </div>
         </div>
       </div>
@@ -123,6 +123,11 @@ watch(() => currentMessages.value, () => {
   overflow-y: auto;
   padding: 20px;
   height: 400px;
+
+  .message-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
 }
 
 .chat-header {
@@ -188,7 +193,7 @@ watch(() => currentMessages.value, () => {
   padding: 20px;
   border-top: 1px solid #eee;
 
-  .upload-button{
+  .upload-button {
     display: flex;
     align-items: center;
   }
