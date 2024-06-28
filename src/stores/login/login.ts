@@ -14,6 +14,7 @@ interface ILoginState {
 }
 
 import { ElMessage } from 'element-plus'
+import useChatStore from '@/stores/chat/chat'
 
 
 function getGreeting() {
@@ -42,10 +43,14 @@ const useLoginStore = defineStore('modules', {
       const loginResult = await accountLoginRequest(account)
 
       if(loginResult.code === 0) {
-        ElMessage.success(`用户:${loginResult.data.name},${getGreeting()}！😊欢迎回来！`)
+        ElMessage.success(`用户:${loginResult.data.name},${getGreeting()}！😊欢迎回来！`);
+
+        // 登录成功后初始化socket，避免无效登录和无效发送消息
+        const chatStore = useChatStore();
+        chatStore.initializeSocket(loginResult.data.id);
       } else {
-        ElMessage.error(loginResult.message)
-        return
+        ElMessage.error(loginResult.message);
+        return;
       }
 
       const id = loginResult.data.id ?? 0
