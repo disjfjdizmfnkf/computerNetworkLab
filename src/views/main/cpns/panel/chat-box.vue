@@ -97,7 +97,7 @@ watch(() => chatMessages.value[currentFriendId.value], () => {
 <style scoped lang="less">
 
 // 清除全局样式了
-:deep .el-input__wrapper {
+:deep(.el-input__wrapper) {
   padding-right: 0;
 }
 
