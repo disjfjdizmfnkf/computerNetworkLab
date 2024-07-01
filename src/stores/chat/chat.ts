@@ -104,14 +104,24 @@ const useChatStore = defineStore('chat', {
 
       if (friendId === 1) {
         // AI 聊天
-        const res = await sendMessageToGpt(message)
-        const resolve = cleanString(res.data)  // 去掉换行符
-        const formattedResolve = resolve.replace(/\\n/g, '\n')  // 将 \n 转换为实际的换行符
-        this.chatMessages[friendId] = [...this.chatMessages[friendId], {
-          from: 'friend',
-          content: formattedResolve,
-          type: 'text'
-        }]
+        try {
+          const res = await sendMessageToGpt(message)
+          if (res && res.from === 'chatGpt' && res.data) {
+            const cleanedData = cleanString(res.data)
+            const formattedData = cleanedData.replace(/\\n/g, '\n')
+            this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'friend', content: formattedData, type: 'text' }]
+          } else {
+            console.error('Invalid response from GPT:', res)
+            this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'friend', content: '抱歉，我遇到了一些问题。请稍后再试。', type: 'text' }]
+          }
+        } catch (error) {
+          console.error('Error in sendMessage:', error)
+          let errorMessage = '发生了错误，请稍后再试。'
+          if (error === 'ECONNABORTED') {
+            errorMessage = '请求超时，请检查你的网络连接并稍后再试。'
+          }
+          this.chatMessages[friendId] = [...this.chatMessages[friendId], { from: 'friend', content: errorMessage, type: 'text' }]
+        }
       } else {
         // 用户聊天
         const encryptedMessage = encryptMessage(JSON.stringify({ message, type }))
