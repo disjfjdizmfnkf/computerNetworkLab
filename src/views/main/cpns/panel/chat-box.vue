@@ -7,12 +7,26 @@
         </div>
       </template>
       <div class="message-box" ref="messageBox">
-        <div v-for="(message, index) in currentMessages" :key="index"
-             :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']">
-          <el-avatar :size="40"
-                     :src="message.from === 'user' ? (sessionCache.getCache(USER_AVATAR) ?? defaultAvatar) : currentFriend.avatar" />
+        <div
+          v-for="(message, index) in currentMessages"
+          :key="index"
+          :class="['message-wrapper', message.from === 'user' ? 'user-message' : 'friend-message']"
+        >
+          <el-avatar
+            :size="40"
+            :src="
+              message.from === 'user'
+                ? sessionCache.getCache(USER_AVATAR) ?? defaultAvatar
+                : currentFriend.avatar
+            "
+          />
           <div class="message-bubble">
-            <img v-if="message.type === 'image'" :src="message.content" alt="Image" class="message-image" />
+            <img
+              v-if="message.type === 'image'"
+              :src="message.content"
+              alt="Image"
+              class="message-image"
+            />
             <p v-else class="message-text">{{ message.content }}</p>
           </div>
         </div>
@@ -93,13 +107,16 @@ onMounted(() => {
   scrollToBottom()
 })
 
-watch(() => currentMessages.value, () => {
-  scrollToBottom()
-}, { deep: true })
+watch(
+  () => currentMessages.value,
+  () => {
+    scrollToBottom()
+  },
+  { deep: true }
+)
 </script>
 
 <style scoped lang="less">
-
 // 清除全局样式了
 :deep(.el-input__wrapper) {
   padding-right: 0;
@@ -113,7 +130,7 @@ watch(() => currentMessages.value, () => {
 .chat-card {
   border-radius: 20px;
   border: #afb9c3 solid;
-  height: 100%;
+  height: 582px;
   display: flex;
   flex-direction: column;
 }

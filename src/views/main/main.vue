@@ -17,18 +17,14 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import AsideTop from '@/views/main/cpns/main/aside-top.vue'
 import AsideFooter from '@/views/main/cpns/main/aside-footer.vue'
 import AsideMain from '@/views/main/cpns/main/aside-main.vue'
 import { ref } from 'vue'
 
-
 const asideFooter = ref<InstanceType<typeof AsideFooter>>()
-
 </script>
-
 
 <style scoped>
 .main-content {
@@ -41,6 +37,7 @@ const asideFooter = ref<InstanceType<typeof AsideFooter>>()
   }
 
   .right {
+    width: 980px;
     position: relative;
     text-align: center;
     background-color: #f0f0f0;
@@ -53,6 +50,4 @@ const asideFooter = ref<InstanceType<typeof AsideFooter>>()
     }
   }
 }
-
-
 </style>

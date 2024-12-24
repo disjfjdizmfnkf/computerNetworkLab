@@ -1,34 +1,41 @@
 <template>
-  <div>
-    <div v-for="(message, index) in messages" :key="index">
-      {{ message }}
+  <div class="moment-wapper">
+    <div class="content">
+      <template v-for="item in momentList" :key="item.id">
+        <moment-box :item-data="item" />
+      </template>
     </div>
-    <input type="text" v-model="newMessage" />
-    <button @click="sendMessage">Send</button>
+    <div class="post-button">
+      <postmomentButton />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import io from 'socket.io-client'
+import useMomentStore from '@/stores/moment/moment.ts'
+import MomentBox from '@/views/main/cpns/panel/cpns/moment-box.vue'
+import postmomentButton from './cpns/postmoment-button.vue'
 
-const messages = ref([])
-const newMessage = ref('')
+const momentStore = useMomentStore()
 
-const socket = io('http://localhost:3001', {
-  withCredentials: true,
-});
+const { momentList } = momentStore
+momentStore.fetchMomentIdListData()
 
-const sendMessage = () => {
-  socket.emit('chat message', newMessage.value)
-  newMessage.value = ''
-}
-
-onMounted(() => {
-  socket.on('chat message', (msg) => {
-    messages.value.push(msg)
-  })
-})
-
-
+console.log(momentList)
 </script>
+
+<style lang="less" scoped>
+.moment-wapper {
+  border-radius: 20px;
+  border: #afb9c3 solid;
+  width: 95%;
+  height: 582px;
+  overflow-y: auto;
+  background-color: #fff;
+}
+.post-button {
+  height: 30px;
+  position: sticky;
+  bottom: 15px;
+}
+</style>
