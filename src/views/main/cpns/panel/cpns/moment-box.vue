@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
-import hyRequest from '@/service/index.ts'
+import { BASE_URL as baseURL } from '@/service/config/index'
 import { like, postComment, unLike } from '@/service/modules/moment.ts'
+import { sessionCache } from '@/utils/cache'
+import { USER_AVATAR } from '@/global/constants'
 
-const baseURL = hyRequest.baseURL
 const props = defineProps({
   itemData: {
     type: Object,
@@ -73,7 +74,7 @@ const postCommentHandler = async (momentId, content) => {
       </div>
       <div class="image-content">
         <!--        <template v-for="(item, index) of photoList">-->
-        <img class="post-image" :src="`${baseURL}moment/photos/${itemData.id}`" alt="" />
+        <img class="post-image" :src="`${baseURL}/moment/photos/${itemData.id}`" alt="" />
         <!--        </template>-->
       </div>
     </div>
@@ -121,7 +122,11 @@ const postCommentHandler = async (momentId, content) => {
 
     <div class="myComment">
       <div>
-        <img class="userAvatar" :src="`${baseURL}users/avatar/10`" alt="" />
+        <img
+          class="userAvatar"
+          :src="sessionCache.getCache(USER_AVATAR) || `${BASE_URL}users/avatar/10`"
+          alt=""
+        />
       </div>
       <input
         v-model="commentContent"

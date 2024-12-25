@@ -99,9 +99,10 @@ const postMomentHandler = async () => {
     const InsertId = response.data.insertId
     const resp = await queryMomentById(InsertId)
     momentList.value.unshift(resp.data)
+    toggleShowPostBox()
   } else {
     showNotify({ message: '动态发表失败！', duration: 1000, background: '#bc0919' })
+    toggleShowPostBox()
   }
-  toggleShowPostBox()
 }
 </script>

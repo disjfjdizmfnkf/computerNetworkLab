@@ -15,7 +15,7 @@ const useMomentStore = defineStore('moment', {
     isShowPostBox: false
   }),
   actions: {
-    async fetchMomentIdListData(offset = 0, num = 3) {
+    async fetchMomentIdListData(offset = 0, num = 5) {
       const res = await getMomentList(offset, num)
       this.momentList.push(...res.data)
       this.offset += num

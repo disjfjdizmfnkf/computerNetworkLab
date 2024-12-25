@@ -1,25 +1,25 @@
-import hyRequest from "@/service"
-import {storeToRefs} from "pinia";
-import axios from "axios";
+import hyRequest from '@/service'
+import { storeToRefs } from 'pinia'
+import axios from 'axios'
 import useLoginStore from '@/stores/login/login'
 
 const loginStore = useLoginStore()
-const {token} = storeToRefs(loginStore)
+const { token } = storeToRefs(loginStore)
 
 export function getMomentList(offset, num) {
   return hyRequest.get({
-    url: "/moment",
-    data: {offset: offset, size: num}
+    url: '/moment',
+    data: { offset: offset, size: num }
   })
 }
 
 // 评论
 export function postComment(momentId, content) {
   return hyRequest.post({
-    url: "/comment",
-    method: "post",
+    url: '/comment',
+    method: 'post',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     },
     data: {
       momentId: momentId,
@@ -38,10 +38,10 @@ export function queryMomentById(momentId) {
 // 回复
 export function postCommentReply(content, momentId, commentId) {
   return hyRequest.post({
-    url: "/comment/reply",
-    method: "post",
+    url: '/comment/reply',
+    method: 'post',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     },
     data: {
       momentId: momentId,
@@ -54,13 +54,13 @@ export function postCommentReply(content, momentId, commentId) {
 // 发表评论
 export function postMoment(content) {
   return hyRequest.post({
-    url: "/moment",
-    method: "post",
+    url: '/moment',
+    method: 'post',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     },
     data: {
-      content: content,
+      content: content
     }
   })
 }
@@ -69,14 +69,13 @@ export function postMoment(content) {
 export function choseLabel(labelList, momentId) {
   return hyRequest.post({
     url: `/moment/label/${momentId}`,
-    method: "post",
+    method: 'post',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     },
     data: {
-      labels: labelList,
+      labels: labelList
     }
-
   })
 }
 
@@ -84,28 +83,27 @@ export function choseLabel(labelList, momentId) {
 export function postMomentPhoto(formData, momentId) {
   return hyRequest.post({
     url: `/file/momentPhoto/${momentId}`,
-    method: "post",
+    method: 'post',
     headers: {
-      'Authorization': `Bearer ${token.value}`,
+      Authorization: `Bearer ${token.value}`,
       'Content-Type': 'multipart/form-data'
     },
     data: formData
   })
 }
 
-
 // 未封装的请求，直接用axios库了
 const instance = axios.create({
   baseURL: 'http://localhost:3000', // 你的基础URL
-  timeout: 1000,
-});
+  timeout: 1000
+})
 
 export function like(momentId) {
   return instance({
     url: `/moment/like/${momentId}`,
     method: 'patch',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     }
   })
 }
@@ -115,7 +113,7 @@ export function unLike(momentId) {
     url: `/moment/unLike/${momentId}`,
     method: 'patch',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     }
   })
 }
@@ -125,7 +123,7 @@ export function modifyMoment(content, momentId) {
     url: `/moment/${momentId}`,
     method: 'patch',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     },
     data: {
       content: content
@@ -139,8 +137,7 @@ export function delMoment(content, momentId) {
     url: `/moment/${momentId}`,
     method: 'delete',
     headers: {
-      'Authorization': `Bearer ${token.value}`
+      Authorization: `Bearer ${token.value}`
     }
   })
 }
-
