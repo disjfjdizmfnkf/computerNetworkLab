@@ -14,6 +14,11 @@
         </el-main>
       </el-container>
     </div>
+    <div class="overlay" v-show="isShowPostBox" @click="handleOverlayClick">
+      <div class="post-moment-wapper" @click.stop>
+        <post-moment-box />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -21,9 +26,21 @@
 import AsideTop from '@/views/main/cpns/main/aside-top.vue'
 import AsideFooter from '@/views/main/cpns/main/aside-footer.vue'
 import AsideMain from '@/views/main/cpns/main/aside-main.vue'
+import PostMomentBox from '@/views/main/cpns/panel/cpns/post-moment-box.vue'
+import useMomentStore from '@/stores/moment/moment'
+import { storeToRefs } from 'pinia'
 import { ref } from 'vue'
 
+const momentStore = useMomentStore()
+const { isShowPostBox } = storeToRefs(momentStore)
+const toggleShow: Function = momentStore.toggleShowBox
 const asideFooter = ref<InstanceType<typeof AsideFooter>>()
+
+function handleOverlayClick(event: Event) {
+  // 蒙板这里要阻止子元素事件冒泡
+  toggleShow()
+  console.log('蒙板发生了点击')
+}
 </script>
 
 <style scoped>
@@ -49,5 +66,28 @@ const asideFooter = ref<InstanceType<typeof AsideFooter>>()
       bottom: 0;
     }
   }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.post-moment-wapper {
+  min-width: 50%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 20px;
+  border-radius: 10px;
 }
 </style>

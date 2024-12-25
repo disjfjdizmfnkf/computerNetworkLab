@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import { BASE_URL } from '@/service/config/index.ts'
+import hyRequest from '@/service/index.ts'
 import { like, postComment, unLike } from '@/service/modules/moment.ts'
-import { sessionCache } from '@/utils/cache'
-import { USER_AVATAR } from '@/global/constants'
 
+const baseURL = hyRequest.baseURL
 const props = defineProps({
   itemData: {
     type: Object,
@@ -58,7 +57,7 @@ const postCommentHandler = async (momentId, content) => {
       <div class="avatar-wrap">
         <img
           class="avatar"
-          :src="itemData.user.avatar_url || `${BASE_URL}users/avatar/10`"
+          :src="itemData.user.avatar_url || `${baseURL}users/avatar/10`"
           alt="用户头像"
         />
       </div>
@@ -73,9 +72,9 @@ const postCommentHandler = async (momentId, content) => {
         <span>{{ itemData.content }}</span>
       </div>
       <div class="image-content">
-        <!-- <template v-for="(item, index) of photoList"> -->
-        <img class="post-image" :src="`${BASE_URL}moment/photos/${itemData.id}`" alt="" />
-        <!-- </template> -->
+        <!--        <template v-for="(item, index) of photoList">-->
+        <img class="post-image" :src="`${baseURL}moment/photos/${itemData.id}`" alt="" />
+        <!--        </template>-->
       </div>
     </div>
 
@@ -86,23 +85,19 @@ const postCommentHandler = async (momentId, content) => {
           v-for="(item, index) in itemData.labels"
           :key="item.id"
           class="tag"
+          >{{ item.name }}</span
         >
-          {{ item.name }}
-        </span>
       </div>
       <div class="stats">
         <div class="icons">
-          <el-icon :size="25">
-            <chat-dot-round />
-          </el-icon>
+          <van-icon name="chat-o" size="25" />
           <span class="comments-count">{{ commentCount }}</span>
-          <el-icon
-            :size="25"
+          <van-icon
+            name="good-job-o"
+            size="25"
             @click="likeToggle(itemData.id)"
-            :class="[isLikeClicked ? 'liked' : 'not-liked', 'icon-hover']"
-          >
-            <Star />
-          </el-icon>
+            :class="isLikeClicked ? 'liked' : 'not-liked'"
+          />
           <span class="likes-count">{{ likesCount }}</span>
         </div>
       </div>
@@ -126,11 +121,7 @@ const postCommentHandler = async (momentId, content) => {
 
     <div class="myComment">
       <div>
-        <img
-          class="userAvatar"
-          :src="sessionCache.getCache(USER_AVATAR) || `${BASE_URL}users/avatar/10`"
-          alt=""
-        />
+        <img class="userAvatar" :src="`${baseURL}users/avatar/10`" alt="" />
       </div>
       <input
         v-model="commentContent"
@@ -139,7 +130,7 @@ const postCommentHandler = async (momentId, content) => {
         @keyup.enter="postCommentHandler(itemData.id, commentContent)"
       />
       <button class="sendComment" @click="postCommentHandler(itemData.id, commentContent)">
-        <el-icon><Promotion /></el-icon>
+        <van-icon name="guide-o" />
       </button>
     </div>
   </div>
@@ -224,9 +215,6 @@ const postCommentHandler = async (momentId, content) => {
     margin-bottom: 10px;
 
     .stats {
-      .icon-hover {
-        cursor: pointer;
-      }
       .icons {
         display: flex;
         align-items: center;
@@ -286,6 +274,7 @@ const postCommentHandler = async (momentId, content) => {
   }
 
   .momentComments {
+    text-align: left;
     background-color: #f2f2f2;
     padding: 10px;
     border-radius: 5px;
@@ -296,7 +285,6 @@ const postCommentHandler = async (momentId, content) => {
     }
 
     .momentComment {
-      text-align: left;
       margin-bottom: 5px;
     }
   }

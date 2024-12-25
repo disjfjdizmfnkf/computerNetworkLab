@@ -8,8 +8,7 @@ interface MomentState {
   isShowPostBox: boolean
 }
 
-const useMomentStore = defineStore<'moment', MomentState>({
-  id: 'moment',
+const useMomentStore = defineStore('moment', {
   state: (): MomentState => ({
     momentList: [],
     offset: 0,

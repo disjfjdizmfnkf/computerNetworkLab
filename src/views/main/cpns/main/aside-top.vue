@@ -6,7 +6,7 @@
       </el-icon>
     </button>
     <div class="title">
-      计算机网络实验
+      好友列表
     </div>
   </div>
 </template>

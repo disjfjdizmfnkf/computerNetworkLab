@@ -4,7 +4,7 @@ import { Edit } from '@element-plus/icons-vue'
 import { ElButton } from 'element-plus'
 
 const momentStore = useMomentStore()
-toggleShow = momentStore.toggleShowBox
+const toggleShow = momentStore.toggleShowBox
 
 function toggleShowPostBox() {
   toggleShow()
@@ -21,7 +21,7 @@ function toggleShowPostBox() {
 .post {
   height: 30px;
   padding-right: 35px;
-  margin: 15px 0;
+  margin: 20px 0;
   display: flex;
   justify-content: end;
   align-items: center;
